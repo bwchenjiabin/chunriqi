@@ -35,11 +35,7 @@
             </span>
             </el-dialog>
             <!-- 添加支出 -->
-            <el-dialog
-                title="提示"
-                :visible.sync="addPay"
-                :center="true"
-                width="50%">
+            <el-dialog title="提示" :visible.sync="addPay" :center="true" width="50%">
             <div class="add-pay">
                 <ul class="add-pay-box">
                     <li class="add-pay-item">
@@ -117,17 +113,13 @@
                   </li>
                    <li class="dressing">
                      <span class="dressing-title">帅选时间</span>
-                     <span>
-                       <select name="name" id="">
-                         <option value=""></option>
-                       </select>
-                     </span>
-                     <span>&nbsp;-&nbsp;</span>
-                     <span>
-                       <select name="name" id="">
-                         <option value=""></option>
-                       </select>
-                     </span>
+                     <el-date-picker
+      v-model="value6"
+      type="daterange"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期">
+    </el-date-picker>
                   </li>
                   <li class="button">
                      <el-row>
@@ -142,7 +134,7 @@
              <div class="work-list">
                <div class="title-box">
                <div class="information-border-left"></div>
-               <h2>收入列表</h2>       
+               <h2>支出列表</h2>       
              </div>
               <div class="vocational">
                 <span>业务筛选</span>
@@ -161,56 +153,26 @@
               <div class="agreement-list">
                 <table class="agreement-list-box">
                 <tr>
-                  <th>订单ID</th>
-                  <th>客户名称</th>
-                  <th>业务办理</th>
-                  <th>结束时间</th>
-                  <th>支付方式</th>
-                  <th>收费金额</th>
-                  <th>
-                    <router-link to="/PayDetailed" class="look">查看</router-link>
-                 </th>
+                  <th>支出订单ID</th>
+                  <th>支出项目ID</th>
+                  <th>支出金额</th>
+                  <th>支出方式</th>
+                  <th>支出时间</th>
+                  <th>备注</th>
+                  <th>凭证图片地址 url </th>
+                  <th>经手人名称</th>
+                  <th>操作</th>
                 </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/PayDetailed" class="look">查看</router-link>
-                 </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/PayDetailed" class="look">查看</router-link>
-                 </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/PayDetailed" class="look">查看</router-link>
-                 </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
+                <tr v-for="(item,index) in list1"
+                    :key = "index">
+                  <td>{{item.id}}</td>
+                  <td>{{item.spend_id}}</td>
+                  <td>{{item.money}}</td>
+                  <td>{{item.service}}</td>
+                  <td>{{item.spend_time}}</td>
+                  <td>{{item.note}}</td>
+                  <td>{{item.picture}}</td>
+                  <td>{{item.create_id}}</td>
                   <td>
                     <router-link to="/PayDetailed" class="look">查看</router-link>
                  </td>
@@ -232,8 +194,13 @@ export default {
       list: ['今天', '昨天', '近7天', '近一月'],
       cur: 0,
       dialogVisible: false,
-      addPay: false
+      addPay: false,
+      list1:{},
+      value6:{}
     }
+  },
+    created () {
+    this.getdata();
   },
   methods: {
       handleClose (done) {
@@ -242,17 +209,18 @@ export default {
             done(); 
           })
       },
-      addPay (done) {
-           this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
+async getdata () {
+      const {data: res} = await this.$axios.post('fs/selectSpendRecord', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 200 ) {
+        this.list1 = res.data.data
       }
+        }
   },
   components: {
     'home-header': Header
-  },
-  methods: {
   }
 }
 </script>

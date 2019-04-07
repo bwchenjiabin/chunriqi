@@ -35,7 +35,6 @@ import PayDetailed from '@/pages/finance/PayDetailed'
 // 合同管理续签
 import Renew from '@/pages/finance/Renew'
 Vue.use(Router)
-
 const router = new Router({
   mode: 'history',
   linkActiveClass: 'is-active',
@@ -45,84 +44,84 @@ const router = new Router({
   }),
   routes: [
     {
-      path: '/',
       name: 'Login',
+      path: '/',
       component: Login
     }, {
-      path: '/home',
       name: 'home',
+      path: '/home',
       component: Home
     }, {
-      path: '/NewUserList',
       name: 'NewUserList',
+      path: '/NewUserList',
       component: NewUserList
     }, {
-      path: '/NewPlan',
       name: 'NewPlan',
+      path: '/NewPlan',
       component: NewPlan
     }, {
-      path: '/PointOut',
       name: 'PointOut',
+      path: '/PointOut',
       component: PointOut
     }, {
-      path: '/Operation',
       name: 'Operation',
+      path: '/Operation',
       component: Operation
     }, {
-      path: '/New',
       name: 'New',
+      path: '/New',
       component: New
     }, {
-      path: '/New',
       name: 'New',
+      path: '/New',
       component: New
     }, {
-      path: '/OperationList',
       name: 'OperationList',
+      path: '/OperationList',
       component: OperationList
     }, {
-      path: '/WordInformation',
       name: 'WordInformation',
+      path: '/WordInformation',
       component: WordInformation
     }, {
-      path: '/Finance',
       name: 'Finance',
+      path: '/Finance',
       component: Finance
     }, {
       path: '/Detailed',
       name: 'Detailed',
       component: Detailed
     }, {
-      path: '/Income',
       name: 'Income',
+      path: '/Income',
       component: Income
     }, {
-      path: '/Pay',
       name: 'Pay',
+      path: '/Pay',
       component: Pay
     }, {
-      path: '/PayDetailed',
       name: 'PayDetailed',
+      path: '/PayDetailed',
       component: PayDetailed
     }, {
-      path: '/Renew',
       name: 'Renew',
+      path: '/Renew',
       component: Renew
     }, {
-      path: '/ClientManage',
       name: 'ClientManage',
+      path: '/ClientManage',
       component: ClientManage
     }, {
-      path: '/Message',
       name: 'Message',
+      path: '/Message',
       component: Message
     }, {
-      path: '/MessageSend',
       name: 'MessageSend',
+      path: '/MessageSend',
       component: MessageSend
     }, {
-      path: '/Account',
       name: 'Account',
+      path: '/Account',
       component: Account
     }
   ]

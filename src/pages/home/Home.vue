@@ -1,7 +1,7 @@
 <template>
      <div class="home">
          <!-- 头部 -->
-         <home-header :user_id="user_id" :token="token"></home-header>
+         <home-header></home-header>
          <div class="home-temp">
            <!-- 新建客户 -->
            <div class="home-com">
@@ -14,7 +14,7 @@
                <router-link to="/NewUserList" tag="div" class="home-text">新建客户</router-link>
              </div>
 
-             <div class="home-item" @click="showList = true">
+             <div class="home-item" v-on:click="getdata0(); showList =  true">
                <img src="../../assets/images/home/Mask(2).png" alt="">
                <div class="item-icon">
                  <img src="../../assets/images/home/merge.png" alt="">
@@ -75,7 +75,6 @@
                 </div>
                <table class="sharingTable">
 						<tr>
-							<th>客户编号</th>
 							<th>客户简称</th>
 							<th>办理业务</th>
 							<th>行业类型</th>
@@ -87,20 +86,20 @@
                             <th>是否紧急？</th>
 							<th>收费金额</th>                          
 						</tr>
-						<tr>
+						<tr v-for="(item,index) in Customerlist"
+            :key = "index">
 							<td class="blue">
-                <router-link to="/New" class="blue">1</router-link>
+                <router-link to="/New" class="blue">{{item.customer_title}}</router-link>
               </td>
-							<td class="blue">1</td>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-                            <td>1</td>
+							<td class="blue">{{item.customer_type}}</td>
+							<td>{{item.customer_company_type}}</td>
+							<td>{{item.employee_name}}</td>
+							<td>{{item.customer_business_address}}</td>
+							<td>{{item.customer_found_date}}</td>
+							<td>{{item.customer_finish_date}}</td>
+							<td>{{item.is_marke}}</td>
+							<td>{{item.is_pressing}}</td>
+							<td>{{item.expense_amt}}</td>
 						</tr>
 					</table>
             </div>
@@ -243,30 +242,40 @@ export default {
   name: 'home',
   data () {
     return {
-      user_id: '',
-      token: '',
       showList: false,
       dialogVisible: false,
       // 用户数据/财务数据
       count:{},
       list: [],
+      Customerlist:{}
     }
   },
   created () {
-    this.getdata()
+    this.getdata();
   },
   methods: {
     async getdata () {
       const {data: res} = await this.$axios.post('fs/customer_index', {
-        user_id: this.$route.query.id,
-        token: this.$route.query.token
+        current_page:1,
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+        
       })
       if (res.code == 1 ) {
         this.count = res.data.count
-        this.list = res.data.customers
+        this.list = res.data.customers    
       }
-      console.log(this.list)
-    }
+    },
+    async getdata0 () {
+      const {data: res} = await this.$axios.post('fs/choose_customer', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token')
+      })
+      if (res.code == 1 ) {
+        this.Customerlist = res.data.customers
+      }
+      // console.log(res.data.customers)
+    },
   },
   components: {
     'home-header': Header,

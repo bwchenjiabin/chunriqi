@@ -87,91 +87,61 @@
                 <button>导出</button>
              </div>
             </div>
-            <div class="agreementbox">
+            <!-- <div class="agreementbox">
               <div class="agreement-list">
                 <table class="agreement-list-box">
                 <tr>
-                  <th>订单ID</th>
-                  <th>客户名称</th>
-                  <th>办理业务</th>
-                  <th>开始时间</th>
-                  <th>结束时间</th>
-                  <th>支付方式</th>
-                  <th>收费金额</th>
-                  <th>详情</th>
-                  <th>操作</th>
+                  <th>模板ID</th>
+                  <th>模板UID</th>
+                  <th>模板内部编号</th>
+                  <th>模板名称</th>
+                  <th>模板内容</th>
+                  <th>模板类型</th>
+                  <th>模板状态</th>
+                  <th>模板排序编号</th>
+                  <th>经手人</th>
                 </tr>
-                <tr>
+                <tr v-for="(item,index) in list"
+                    :key = "index">
                   <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
+                    <router-link to="/Detailed" class="blue">{{item.id}}</router-link>
                   </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
+                  <td>{{item.uuid}}</td>
+                  <td>{{item.message_templet_code}}</td>
+                  <td>{{item.message_templet_name}}</td>
+                  <td>{{item.message_templet_content}}</td>
+                  <td>{{item.message_templet_type}}</td>  
+                  <td>{{item.hx_record_status}}</td>  
+                  <td>{{item.hx_record_sort_no}}</td>  
+                  <td>{{item.handler}}</td>  
                 </tr>
               </table>
               </div>
-            </div>
+            </div> -->
+             <div class="Customer-total margin">
+                <el-table style="width: 100%;"
+            :data="list.slice((CustomerTotalPage-1)*CustomerTotalPagesize,CustomerTotalPage*CustomerTotalPagesize)"
+            >
+                <el-table-column label="模板ID" prop="id"></el-table-column>
+                <el-table-column label="模板UID" prop="uuid"></el-table-column>
+                <el-table-column label="模板内部编号" prop="message_templet_code"></el-table-column>
+                <el-table-column label="模板名称" prop="message_templet_name"></el-table-column>
+                <el-table-column label="模板内容" prop="message_templet_content"></el-table-column>
+                <el-table-column label="模板类型" prop="message_templet_type"></el-table-column>
+                <el-table-column label="模板状态" prop="hx_record_status"></el-table-column>
+                <el-table-column label="模板排序编号" prop="hx_record_sort_no"></el-table-column>
+                <el-table-column label="经手人" prop="handler"></el-table-column>
+            </el-table>
+            <el-pagination
+@size-change="CustomerTotalSize"
+@current-change="CustomerTotalCurrent"
+:current-page="CustomerTotalPage"
+:page-sizes="[5, 10, 20, 40]"
+:page-size="CustomerTotalPagesize"
+layout="total, sizes, prev, pager, next, jumper"
+:total="list.length"
+></el-pagination>
+</div>
            </div>
          </div>
      </div>
@@ -183,28 +153,45 @@ export default {
   name: 'message',
   data () {
     return {
-      tabletab: {
-            'table': ['全部', '已分配', '处理中', '已完成', '已取消'],
-            'tableTitle': ['客户简称', '主题', '计划开始时间', '计划完成日期', '实际完成日期', '分配人', '执行人', '状态', '状态', '操作']
-      },
       cur: 0,
-      dialogVisible: false
+      dialogVisible: false,
+      list:[],
+      CustomerTotalData: [ ], //总数据
+      CustomerTotalPage: 1, //初始页
+      CustomerTotalPagesize: 5, // 每页的数据
     }
   },
+  created () {
+    this.getdata()
+  },
   methods: {
+        CustomerTotalSize: function(size) {
+    this.CustomerTotalPagesize = size;
+    },
+    CustomerTotalCurrent: function(currentPage) {
+    this.CustomerTotalPage = currentPage;
+    },
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
             done();
           })
           .catch(_ => {});
+      },
+  async getdata () {
+      const {data: res} = await this.$axios.post('fs/selectMessageTemplet', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 200 ) {
+        this.list = res.data.data
       }
+    //   console.log(res.data.data)
+    },
   },
   components: {
     'home-header': Header
   },
-  methods: {
-  }
 }
 </script>
 
@@ -385,5 +372,8 @@ background: #F9F9F9;
 }
 .templet-first select {
     width: 175px;
+}
+.pages{
+    margin-bottom: 27px;
 }
 </style>

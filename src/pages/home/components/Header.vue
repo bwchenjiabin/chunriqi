@@ -7,10 +7,10 @@
       </div>
       <!-- 导航 -->
       <div class="header-nav">
-        <router-link :to="{path:'/home', query: {}}">首页</router-link>
+        <router-link to="/home">首页</router-link>
         <router-link to="/Operation">业务管理</router-link>
-        <router-link to="/Finance">财务管理</router-link>
-        <router-link to="/clientManage">客户管理</router-link>
+        <router-link to="/Finance">合同管理</router-link>
+        <router-link to="/ClientManage">客户管理</router-link>
         <router-link to="/Message">短信管理</router-link>
         <router-link to="/Account">账户管理</router-link>
       </div>
@@ -23,7 +23,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data () {
@@ -33,12 +32,12 @@ export default {
     }
   },
   created () {
-  console.log(this.$route.query);
-  
   this.getdata()
 },
   methods: {
     async getdata () {
+      var user_id = this.getCookie('id');
+      var token = this.getCookie('token');
       const {data: res} = await this.$axios.post('fs/customer_index', {
         user_id: this.$route.query.id,
         token: this.$route.query.token
@@ -47,8 +46,7 @@ export default {
         this.count = res.data.count
         this.list = res.data.customers
       }
-      console.log(this.list)
-    }
+    },
   },
 }
 </script>
@@ -89,7 +87,7 @@ export default {
   color: #fff;
 }
 .header-nav .is-active {
-  background-color: yellow;
+  background-color: #128CFF;
 }
 /* 头像 */
 .head-portrait {

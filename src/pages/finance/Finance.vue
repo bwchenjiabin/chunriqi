@@ -23,31 +23,20 @@
              <!-- 订单 -->
              <div class="form-list">
                 <ul class="contacts-list">
-                  <li class="item">客户编号&nbsp;&nbsp;<input type="text"></li>
+                  <li class="item">订单ID&nbsp;&nbsp;<input type="text"></li>
                   <li class="item">
-                      <span>接件日期&nbsp;&nbsp;</span>
-                      <span>
-                          <select name="name" id="">
-                              <option value=""></option>
-                          </select>
-                      </span>
+                      <span>开始时间&nbsp;&nbsp;</span>
+                      <el-date-picker v-model="value1" type="date" placeholder="选择日期"></el-date-picker>
                   </li>
                   <li class="item">
-                      <span>接件日期&nbsp;&nbsp;</span>
-                      <span>
-                          <select name="name" id="">
-                              <option value=""></option>
-                          </select>
-                      </span>
+                      <span>结束时间&nbsp;&nbsp;</span>
+                      <el-date-picker v-model="value2" type="date" placeholder="选择日期"></el-date-picker>
                   </li>
-                  <li class="item">
-                      <span>接件日期&nbsp;&nbsp;</span>
-                      <span>
-                          <select name="name" id="">
-                              <option value=""></option>
-                          </select>
-                      </span>
-                  </li>
+                  <li class="item">办理业务&nbsp;&nbsp;<input type="text" list="itemlist"></li>
+                  <datalist id="itemlist">
+                      <option v-for="(item,index) in list1"
+                  :key = "index">{{item.udc_name}}</option>
+                  </datalist>     
                 </ul>
              </div>
              <div class="button">
@@ -67,103 +56,94 @@
                 <button>导出</button>
              </div>
             </div>
-            <div class="agreementbox">
-              <div class="agreement-list">
-                <table class="agreement-list-box">
-                <tr>
-                  <th>订单ID</th>
-                  <th>客户名称</th>
-                  <th>办理业务</th>
-                  <th>开始时间</th>
-                  <th>结束时间</th>
-                  <th>支付方式</th>
-                  <th>收费金额</th>
-                  <th>详情</th>
-                  <th>操作</th>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-              </table>
-              </div>
-            </div>
+            <div class="Customer-total margin">
+                <el-table style="width: 100%;" :data="list.slice((CustomerTotalPage-1)*CustomerTotalPagesize,CustomerTotalPage*CustomerTotalPagesize)">
+                <el-table-column label="订单ID" prop="id"></el-table-column>
+                <el-table-column label="合同编号" prop="contract_number"></el-table-column>
+                <el-table-column label="企业名称" prop="customer_code"></el-table-column>
+                <el-table-column label="办理业务名称" prop="business_id"></el-table-column>
+                <el-table-column label="合同开始时间" prop="begin_time"></el-table-column>
+                <el-table-column label="合同结束时间" prop="end_time"></el-table-column>
+                <el-table-column label="合同支付方式" prop="service"></el-table-column>
+                <el-table-column label="合同金额" prop="money"></el-table-column>
+                <el-table-column label="详情" prop="scope" >
+                  <template slot-scope="scope">
+                    <el-button @click="openDetails(scope.row.id)">查看</el-button>
+                  </template>
+                  </el-table-column>
+                <el-table-column label="操作" prop="">续约</el-table-column>
+            </el-table>
+            <el-pagination
+@size-change="CustomerTotalSize"
+@current-change="CustomerTotalCurrent"
+:current-page="CustomerTotalPage"
+:page-sizes="[5, 10, 20, 40]"
+:page-size="CustomerTotalPagesize"
+layout="total, sizes, prev, pager, next, jumper"
+:total="list.length"
+></el-pagination>
+</div>
            </div>
          </div>
      </div>
 </template>
 
 <script>
-import Header from '@/pages/home/components/Header'
+import Header from '@/pages/home/components/Header'  
 export default {
   name: 'NewPlan',
   data () {
     return {
+       value1:"",
+       value2:"",
+       list1:{},
+       CustomerTotalData: [ ], //总数据
+      CustomerTotalPage: 1, //初始页
+      CustomerTotalPagesize: 5, // 每页的数据
+      list:[],
     }
   },
+  created () {
+    this.getdata();
+      // 办理业务
+  this.Businessdata();
+  },
   methods: {
+        CustomerTotalSize: function(size) {
+    this.CustomerTotalPagesize = size;
+    },
+    CustomerTotalCurrent: function(currentPage) {
+    this.CustomerTotalPage = currentPage;
+    },
+      async Businessdata () {
+    const {data: res} = await this.$axios.post('fs/customer_type_info', {
+      user_id: this.getCookie('id'),
+      token: this.getCookie('token'),
+    })
+    if (res.code == 1 ) {
+        this.list1 = res.data  
+      }
+  },
+    async getdata () {
+      const {data: res} = await this.$axios.post('fs/selcetContract', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 200 ) {
+        this.list = res.data.data
+      }
+      // console.log(res.data.data)
+        },
+        openDetails(id){
+          this.$router.push({
+            path:`/Detailed`,
+            query: {id:id}
+          })
+        }
   },
   components: {
     'home-header': Header
   },
-  methods: {
-  }
 }
 </script>
 
@@ -185,6 +165,10 @@ export default {
     color: #fff;
     margin: auto;
     border-radius: 5px;
+}
+.item input{
+    border-radius: 5px;
+    border: 1px solid rgba(221,221,221,1);
 }
 .button .button-btn {
     width: 100%;

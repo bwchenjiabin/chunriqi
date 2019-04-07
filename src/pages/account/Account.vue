@@ -20,7 +20,7 @@
                   </li>
                   <li class="item">
                       <span>
-                          <button class="new" @click="dialogVisible = true">新建模板</button>
+                          <button class="new" @click="dialogVisible = true">新建账号</button>
                       </span>
                   </li>
                 </ul>
@@ -28,40 +28,30 @@
            </div>
            <!-- 新建模板弹窗 -->
            <el-dialog
-                title="短信模板新建"
+                title="新建账号"
                 :visible.sync="dialogVisible"
                 :center="true"
-                width="50%">
-                <div>
-                    <ul class="templet">
-                        <li class="templet-first">
-                            <span class="templet-name">短信模板编号</span>
-                            <span>*</span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span class="templet-name">短信模板名称</span>
-                            <span>*</span>
-                            <input type="text">
-                        </li>
-                    </ul>
-                    <ul class="templet">
-                        <li class="templet-first">
-                            <span class="templet-name">模板类型</span>
-                            <span>*</span>
-                            <select name="name" id="">
-                                <option value=""></option>
-                            </select>
-                        </li>
-                        <li class="templet-first">
-                            <span class="templet-name">经手人</span>
-                            <span>*</span>
-                            <input type="text">
-                        </li>
-                    </ul>
-                    <div class="content templet-first">
-                        <div class="templet-name">短信内容<span>*</span></div>
-                        <div><textarea name="name" id="" cols="85" rows="2"></textarea></div>
+                width="35%">
+                           <div class="password">
+                    <div class="password-box">
+                        <ul class="account">
+                            <li class="account-list">
+                                <span class="account-item">账号&nbsp;&nbsp;</span>
+                                <input type="text">
+                            </li>
+                             <li class="account-list">
+                                <span class="account-item">姓名&nbsp;&nbsp;</span>
+                                <input type="text">
+                            </li>
+                             <li class="account-list">
+                                <span class="account-item">密码&nbsp;&nbsp;</span>
+                                <input type="text">
+                            </li>
+                             <li class="account-list">
+                                <span class="account-item">确认密码&nbsp;&nbsp;</span>
+                                <input type="text">
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
@@ -83,55 +73,20 @@
               <div class="agreement-list">
                 <table class="agreement-list-box">
                 <tr>
-                  <th>账号</th>
+                  <th>用户ID</th>
                   <th>姓名</th>
-                  <th>权限</th>
+                  <th>用户账号</th>
                   <th>密码</th>
                   <th>操作</th>
                 </tr>
-                <tr>
+                <tr v-for="(item,index) in list"
+                :key = "index">
                   <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
+                    <router-link to="/Detailed" class="blue">{{item.id}}</router-link>
                   </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td class="button">
-                    <button class="btn1" @click="revise=true">修改</button>
-                    <button class="btn2">删除</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td class="button">
-                   <button class="btn1" @click="revise=true">修改</button>
-                    <button class="btn2">删除</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td class="button">
-                   <button class="btn1" @click="revise=true">修改</button>
-                    <button class="btn2">删除</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
+                  <td>{{item.name}}</td>
+                  <td>{{item.account}}</td>
+                  <td>{{item.password}}</td>
                   <td class="button">
                     <button class="btn1" @click="revise=true">修改</button>
                     <button class="btn2">删除</button>
@@ -192,8 +147,12 @@ export default {
       },
       cur: 0,
       dialogVisible: false,
-      revise:false
+      revise:false,
+      list:{}
     }
+  },
+    created () {
+    this.getdata()
   },
   methods: {
       handleClose(done) {
@@ -203,19 +162,26 @@ export default {
           })
           .catch(_ => {});
       },
-      revise(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+    //   revise(done) {
+    //     this.$confirm('确认关闭？')
+    //       .then(_ => {
+    //         done();
+    //       })
+    //       .catch(_ => {});
+    //   },
+    async getdata () {
+      const {data: res} = await this.$axios.post('fs/admin_list', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 1 ) {
+        this.list = res.data
       }
+    },
   },
   components: {
     'home-header': Header
   },
-  methods: {
-  }
 }
 </script>
 
@@ -239,6 +205,10 @@ export default {
     font-size: 21px;
     color: #999999;
     margin-right: 40px;
+}
+li input{
+    border-radius: 5px;
+    border: 1px solid rgba(221,221,221,1);
 }
 .plan-title .blue {
   color: #02A6ED;

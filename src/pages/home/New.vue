@@ -303,7 +303,21 @@ export default {
   components: {
     'home-header': Header
   },
+  created () {
+    this.getdata()
+  },
   methods: {
+      async getdata () {
+      const {data: res} = await this.$axios.post('fs/selectMessageLog', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 1 ) {
+        // this.list = res.data.data
+        // this.list = res.data.customers
+      }
+      console.log(res)
+    },
   }
 }
 </script>

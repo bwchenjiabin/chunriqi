@@ -22,33 +22,16 @@
              </div>
              <div class="order">
                  <div class="order-content">
-                     <ul class="order-box">
-                         <li class="item">
-                             <span class="item-top">订单ID</span>
-                             <span><input type="text"></span>
-                         </li>
-                         <li class="item">
-                             <span class="item-top">客户名称</span>
-                             <span class="item-button"><input type="text"></span>
-                         </li>
-                         <li class="item">
-                             <span class="item-top">办理业务</span>
-                             <span class="item-button"><input type="text"></span>
-                         </li>
-                     </ul>
-                     <ul class="order-box">
-                         <li class="item">
-                             <span class="item-top">开始时间</span>
-                             <span><input type="text"></span>
-                         </li>
-                         <li class="item">
-                             <span class="item-top">结束时间</span>
-                             <span class="item-button"><input type="text"></span>
-                         </li>
-                         <li class="item">
-                             <span class="item-top">支付方式</span>
-                             <span class="item-button"><input type="text"></span>
-                         </li>
+                     <ul v-for="(item,index) in list"
+                  :key = "index">
+                         签约合同id:<li>{{item.ud}}</li>
+                         编号:<li>{{item.contract_number}}</li>
+                         企业名称:<li>{{item.customer_code}}</li>
+                         办理业务名称:<li>{{item.business_id}}</li>
+                         合同开始时间:<li>{{item.begin_time}}</li>
+                         合同结束时间:<li>{{item.end_time}}</li>
+                         支付方式:<li>{{item.service}}</li>
+                         支付金额:<li>{{item.money}}</li>
                      </ul>
                  </div>
              </div>
@@ -63,12 +46,28 @@ export default {
   name: 'NewPlan',
   data () {
     return {
+        Id: this.$route.query.id,
+        list:{}
     }
+  },
+  created () {
+    this.getdata();
   },
   methods: {
       addWordInformation () {
           this.$router.push('/WordInformation')
+      },
+        async getdata () {
+      const {data: res} = await this.$axios.post('fs/contractDetial', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+        contract_id:this.Id
+      })
+      if (res.code == 200 ) {
+          this.list = res.data
       }
+      console.log(res)
+    },
   },
   components: {
     'home-header': Header

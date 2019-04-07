@@ -32,17 +32,13 @@
                   </li>
                    <li class="dressing">
                      <span class="dressing-title">帅选时间</span>
-                     <span>
-                       <select name="name" id="">
-                         <option value=""></option>
-                       </select>
-                     </span>
-                     <span>&nbsp;-&nbsp;</span>
-                     <span>
-                       <select name="name" id="">
-                         <option value=""></option>
-                       </select>
-                     </span>
+                     <el-date-picker
+      v-model="value1"
+      type="daterange"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期">
+    </el-date-picker>
                   </li>
                   <li class="button">
                      <el-row>
@@ -72,65 +68,60 @@
                 <button>导出</button>
              </div>
             </div>
-            <div class="agreementbox">
+            <!-- <div class="agreementbox">
               <div class="agreement-list">
                 <table class="agreement-list-box">
                 <tr>
-                  <th>订单ID</th>
-                  <th>客户名称</th>
-                  <th>业务办理</th>
-                  <th>结束时间</th>
-                  <th>支付方式</th>
-                  <th>收费金额</th>
-                  <th>详情</th>
+                  <th>合同ID</th>
+                  <th>合同编号</th>
+                  <th>企业名称</th>
+                  <th>办理业务名称</th>
+                  <th>合同开始时间</th>
+                  <th>合同结束时间</th>
+                  <th>合同支付方式</th>
+                  <th>合同收入金额</th>
                 </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed" class="look">查看</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed" class="look">查看</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed" class="look">查看</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
+                <tr v-for="(item,index) in list1"
+                    :key = "index">
+                  <td>{{item.id}}</td>
+                  <td>{{item.contract_number}}</td>
+                  <td>{{item.customer_code}}</td>
+                  <td>{{item.business_id}}</td>
+                  <td>{{item.begin_time}}</td>
+                  <td>{{item.end_time}}</td>
+                  <td>{{item.service}}</td>
+                  <td>{{item.money}}</td>
                   <td>
                     <router-link to="/Detailed" class="look">查看</router-link>
                   </td>
                 </tr>
               </table>
               </div>
-            </div>
+            </div> -->
+                        <div class="Customer-total margin">
+                <el-table style="width: 100%;"
+            :data="list1.slice((CustomerTotalPage-1)*CustomerTotalPagesize,CustomerTotalPage*CustomerTotalPagesize)"
+            >
+                <el-table-column label="合同ID" prop="id"></el-table-column>
+                <el-table-column label="合同编号" prop="contract_number"></el-table-column>
+                <el-table-column label="企业名称" prop="customer_code"></el-table-column>
+                <el-table-column label="办理业务名称" prop="business_id"></el-table-column>
+                <el-table-column label="合同开始时间" prop="begin_time"></el-table-column>
+                <el-table-column label="合同结束时间" prop="end_time"></el-table-column>
+                <el-table-column label="合同支付方式" prop="service"></el-table-column>
+                <el-table-column label="合同收入金额" prop="money"></el-table-column>
+                <el-table-column label="详情" prop="days"><a href="/Detailed" class="look">查看</a></el-table-column>
+            </el-table>
+            <el-pagination
+@size-change="CustomerTotalSize"
+@current-change="CustomerTotalCurrent"
+:current-page="CustomerTotalPage"
+:page-sizes="[5, 10, 20, 40]"
+:page-size="CustomerTotalPagesize"
+layout="total, sizes, prev, pager, next, jumper"
+:total="list1.length"
+></el-pagination>
+</div>
            </div>
          </div>
      </div>
@@ -143,16 +134,38 @@ export default {
   data () {
     return {
       list: ['今天', '昨天', '近7天', '近一月'],
-      cur: 0
+      cur: 0,
+      list1:[],
+      value1:{},
+      CustomerTotalData: [ ], //总数据
+      CustomerTotalPage: 1, //初始页
+      CustomerTotalPagesize: 5, // 每页的数据
     }
   },
+  created () {
+    this.getdata();
+  },
   methods: {
+            CustomerTotalSize: function(size) {
+    this.CustomerTotalPagesize = size;
+    },
+    CustomerTotalCurrent: function(currentPage) {
+    this.CustomerTotalPage = currentPage;
+    },
+        async getdata () {
+      const {data: res} = await this.$axios.post('fs/selectIncome', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 200 ) {
+        this.list1 = res.data.data
+      }
+      // console.log(res)
+        }
   },
   components: {
     'home-header': Header
   },
-  methods: {
-  }
 }
 </script>
 

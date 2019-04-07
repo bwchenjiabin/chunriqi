@@ -68,11 +68,13 @@ export default {
         // 调用登陆接口
         const {data: res} = await this.$axios.post('login', this.formData)
         if (res.code !== 1) {
-          window.localStorage.removeItem('token')
+        //   window.localStorage.removeItem('token')
           return this.$message.error('登陆失败')
         }
         this.$message.success('登陆成功')
-        window.localStorage.setItem('token', res.data.token)
+
+        this.setCookie('id',res.data.id);
+        this.setCookie('token',res.data.token);
         this.$router.push({
           path: '/home',
           query: {id: res.data.id, token: res.data.token}
@@ -94,7 +96,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: url('../../assets/images/login/bgc.png') no-repeat center;
+    background: url('../../assets/images/login/bgc.jpg') no-repeat center;
 }
 .login-box {
     width: 700px;

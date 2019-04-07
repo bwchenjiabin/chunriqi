@@ -49,83 +49,25 @@
               <div class="agreement-list">
                 <table class="agreement-list-box">
                 <tr>
-                  <th>订单ID</th>
-                  <th>客户名称</th>
-                  <th>办理业务</th>
-                  <th>开始时间</th>
-                  <th>结束时间</th>
-                  <th>支付方式</th>
-                  <th>收费金额</th>
-                  <th>详情</th>
-                  <th>操作</th>
+                  <th>订单编号</th>
+                  <th>企业简称</th>
+                  <th>发送手机号码</th>
+                  <th>发送日期</th>
+                  <th>发送人</th>
+                  <th>发送内容</th>
+                  <th>发送成功状态</th>
                 </tr>
-                <tr>
+                <tr v-for="(item,index) in list"
+                    :key = "index">
                   <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
+                    <router-link to="/Detailed" class="blue">{{item.message_send_log_code}}</router-link>
                   </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <router-link to="/Detailed" class="blue">1</router-link>
-                  </td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>
-                    <router-link to="/Detailed">查看</router-link>
-                  </td>
-                  <td>
-                    <router-link to="/Income">续约</router-link>
-                  </td>
+                  <td>{{item.customer_code}}</td>
+                  <td>{{item.message_send_phone_number}}</td>
+                  <td>{{item.message_send_date}}</td>
+                  <td>{{item.owner_user}}</td>
+                  <td>{{item.message_send_content}}</td>  
+                  <td>{{item.message_send_status}}</td>  
                 </tr>
               </table>
               </div>
@@ -146,14 +88,25 @@ export default {
             'tableTitle': ['客户简称', '主题', '计划开始时间', '计划完成日期', '实际完成日期', '分配人', '执行人', '状态', '状态', '操作']
       },
       cur: 0,
+      list:{}
     }
-  },
-  methods: {
   },
   components: {
     'home-header': Header
   },
+    created () {
+    this.getdata()
+  },
   methods: {
+      async getdata () {
+      const {data: res} = await this.$axios.post('fs/selectMessageLog', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+      })
+      if (res.code == 200 ) {
+        this.list = res.data.data
+      }
+    },
   }
 }
 </script>

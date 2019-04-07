@@ -15,89 +15,32 @@
              <!-- 客户信息列表 -->
              <div class="user-list">
                <ul class="list-box">
-                <li class="list-item">
-                   <span class="prive">关键字符</span>
-                   <span class="item-content"><input type="text"></span>
-                </li>
-                <li class="list-item">
-                   <span class="prive">计划开始日期</span>
-                   <span class="item-content">
-                       <select name="name" id="">
-                           <option value="1"></option>
-                       </select>
-                       <span>-</span>
-                       <select name="name" id="">
-                           <option value="1"></option>
-                       </select>
-                   </span>
-                </li>
-                <li class="list-item">
-                   <span class="prive">执行人</span>
-                   <span class="item-content">
-                       <select name="name" id="" class="select">
-                           <option value="1"></option>
-                       </select>
-                   </span>
-                </li>
+                <li class="item">关键字符&nbsp;&nbsp;<input type="text"></li>
+                <li class="item"><span>计划开始日期</span>&nbsp;&nbsp;<el-date-picker v-model="value1" type="date" placeholder="选择日期"></el-date-picker></li>
+                <li class="item">执行人&nbsp;&nbsp;<input type="text" list="itemlist"></li>
+                  <datalist id="itemlist">
+                      <option v-for="(item,index) in list1"
+                  :key = "index">{{item.employee_name}}</option>
+                  </datalist>     
                </ul>
                <ul class="list-box">
-                <li class="list-item">
-                   <span class="prive">客户名称</span>
-                   <span class="item-content">
-                       <select name="name" id="" class="select">
-                           <option value="1"></option>
-                       </select>
-                   </span>
-                </li>
-                <li class="list-item">
-                   <span class="prive">计划完成日期</span>
-                   <span class="item-content">
-                       <select name="name" id="">
-                           <option value="1"></option>
-                       </select>
-                       <span>-</span>
-                       <select name="name" id="">
-                           <option value="1"></option>
-                       </select>
-                   </span>
-                </li>
-                <li class="list-item">
-                   <span class="prive">分配人</span>
-                   <span class="item-content">
-                        <select name="name" id="" class="select">
-                           <option value="1"></option>
-                       </select>
-                   </span>
-                </li>
+                 <li class="item">客户名称&nbsp;&nbsp;<input type="text"></li>
+                <li class="item">计划完成日期&nbsp;&nbsp;<el-date-picker v-model="value2" type="date" placeholder="选择日期"></el-date-picker></li>
+                <li class="item">分配人&nbsp;&nbsp;<input type="text" list="itemlist1"></li>
+                  <datalist id="itemlist1">
+                      <option v-for="(item,index) in list1"
+                  :key = "index">{{item.employee_name}}</option>
+                  </datalist>     
                </ul>
                <ul class="list-box">
-               <li class="list-item">
-                    <span class="prive">客户状态</span>
-                    <span class="item-content">
-                        <input type="radio">&nbsp;已分配
-                    </span>
-                    <span>
-                       <input type="radio">&nbsp;处理中
-                    </span>
-                    <span>
-                        <input type="radio">&nbsp;已完成
-                    </span>
-                    <span>
-                        <input type="radio">&nbsp;已取消
-                    </span>
-                </li>
-                 <li class="list-item">
-                   <span class="prive">实际完成日期</span>
-                   <span class="item-content">
-                     <select name="name" id="">
-                           <option value="1"></option>
-                       </select>
-                       <span>-</span>
-                       <select name="name" id="">
-                           <option value="1"></option>
-                       </select>
-                   </span>
-                </li>
+                <li style="display:block;">
+                  客户状态
+                  <el-radio v-model="radio" label="1">已分配</el-radio>
+                  <el-radio v-model="radio" label="2">处理中</el-radio>
+                  <el-radio v-model="radio" label="3">已完成</el-radio>
+                  <el-radio v-model="radio" label="4">已取消</el-radio>
+                  </li>
+                 <li class="item">实际完成日期&nbsp;&nbsp;<el-date-picker v-model="value3" type="date" placeholder="选择日期"></el-date-picker></li>
                 <li class="list-item">
                     <span slot="footer" class="dialog-footer">
                         <el-button type="primary" class="seek">查 找</el-button>
@@ -128,7 +71,7 @@
             </div>
         </div>
         <div class="work-list-box">
-            <div>
+            <!-- <div>
                 <table class="sharingTable">
 					<tr>
 						<th 
@@ -136,36 +79,62 @@
                         :key="index"
                         >{{title}}</th>                
 					</tr>
-					<tr>
+					<tr v-for="(item,index) in list"
+                    :key = "index">
 						<td>
-                            <router-link to="/OperationList" class="blue">1</router-link>
+                            <router-link to="/OperationList" class="blue">{{item.customer_title}}</router-link>
                         </td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>1</td>
+                        <td>{{item.work_item_desc}}</td>
+                        <td>{{item.org_plan_begin_date}}</td>
+                        <td>{{item.org_plan_finished_date}}</td>
+                        <td>{{item.actual_finish_date}}</td>
+                        <td>{{item.assigner}}</td>
+                        <td>{{item.operator}}</td>
+                        <td>{{item.status}}</td>
+                        <td>{{item.days}}</td>
+                        <td>{{item.work_item_code}}</td>
 					</tr>
 				</table>
                 
-            </div>
-            <div class="pages fr">
+            </div> -->
+            <!-- <div class="pages fr">
                 <div class="block">
-                    <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentPage4"
-                        :page-sizes="[1, 5, 10, 15]"
-                        :page-size="22"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="22">
-                    </el-pagination>
+                   <el-pagination
+                    @size-change="CustomerTotalSize"
+                    @current-change="CustomerTotalCurrent"
+                    :current-page="CustomerTotalPage"
+                    :page-sizes="[5, 10, 20, 40]"
+                    :page-size="CustomerTotalPagesize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="CustomerTotalData.length"
+                    ></el-pagination>
                 </div>
-            </div>
+            </div> -->
+            <div class="Customer-total margin">
+                <el-table style="width: 100%;"
+            :data="list.slice((CustomerTotalPage-1)*CustomerTotalPagesize,CustomerTotalPage*CustomerTotalPagesize)"
+            >
+                <el-table-column label="客户简称" prop="customer_title"></el-table-column>
+                <el-table-column label="主题" prop="work_item_desc"></el-table-column>
+                <el-table-column label="计划开始时间" prop="org_plan_begin_date"></el-table-column>
+                <el-table-column label="计划完成日期" prop="org_plan_finished_date"></el-table-column>
+                <el-table-column label="实际完成日期" prop="actual_finish_date"></el-table-column>
+                <el-table-column label="分配人" prop="assigner"></el-table-column>
+                <el-table-column label="执行人" prop="operator"></el-table-column>
+                <el-table-column label="工作项状态" prop="status"></el-table-column>
+                <el-table-column label="距离完成天数" prop="days"></el-table-column>
+                <el-table-column label="工作项状态代码" prop="work_item_code"></el-table-column>
+            </el-table>
+            <el-pagination
+@size-change="CustomerTotalSize"
+@current-change="CustomerTotalCurrent"
+:current-page="CustomerTotalPage"
+:page-sizes="[5, 10, 20, 40]"
+:page-size="CustomerTotalPagesize"
+layout="total, sizes, prev, pager, next, jumper"
+:total="list.length"
+></el-pagination>
+</div>
           </div>
         </div>
     </div>
@@ -178,24 +147,68 @@ export default {
     return {
             tabletab: {
                   'table': ['全部', '已分配', '处理中', '已完成', '已取消'],
-                  'tableTitle': ['客户简称', '主题', '计划开始时间', '计划完成日期', '实际完成日期', '分配人', '执行人', '状态', '状态', '操作']
+                  'tableTitle': ['客户简称', '主题', '计划开始时间', '计划完成日期', '实际完成日期', '分配人', '执行人', '工作项状态', '距离完成天数', '工作项状态代码']
             },
              cur: 0,
             //  分页
-            currentPage1: 5,
-            currentPage2: 5,
-            currentPage3: 5,
-            currentPage4: 21
+            // currentPage1: 5,
+            // currentPage2: 5,
+            // currentPage3: 5,
+            // currentPage4: 21,
+            list:[],
+            current_page:"",
+            list1:{},
+            value1:"",
+            value2:"",
+            value3:"",
+            radio: "1",
+            CustomerTotalData: [ ], //总数据
+            CustomerTotalPage: 1, //初始页
+            CustomerTotalPagesize: 5, // 每页的数据
         }
     },
+      created () {
+    this.getdata();
+    // 执行人
+    this.Executor();
+  },
     methods: {
-        // 分页功能
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange (val) {
-        console.log(`当前页: ${val}`);
+        // 分页
+    CustomerTotalSize: function(size) {
+    this.CustomerTotalPagesize = size;
+    },
+    CustomerTotalCurrent: function(currentPage) {
+    this.CustomerTotalPage = currentPage;
+    },
+        // 分页功能 
+    //   handleSizeChange (val) {
+    //     console.log(`每页 ${val} 条`);
+    //   },
+    //   handleCurrentChange (val) {
+    //     console.log(`当前页: ${val}`);
+    //   },
+    async getdata () {
+      const {data: res} = await this.$axios.post('fs/work_index', {
+        user_id: this.getCookie('id'),
+        token: this.getCookie('token'),
+        page: 1
+      })
+      if (res.code == 1 ) {
+        this.list = res.data.works
+        this.current_page = res.data.current_page    
       }
+    //   console.log(res.data.current_page)
+        },
+    // 执行人
+    async Executor () {
+    const {data: res} = await this.$axios.post('fs/user_info', {
+      user_id: this.getCookie('id'),
+      token: this.getCookie('token'),
+    })
+    if (res.code == 1 ) {
+        this.list1 = res.data
+      }
+  },
     },
     components: {
         'home-header': Header
@@ -204,6 +217,10 @@ export default {
 </script>
 
 <style scoped>
+.item input{
+    border-radius: 5px;
+    border: 1px solid rgba(221,221,221,1);
+}
 .operation {
   width: 100%;
   padding: 0 120px;
@@ -224,6 +241,14 @@ export default {
     display: inline-block;
     
 }
+.item{
+  text-align: right;
+  margin: 10px 40px 5px 40px;
+}
+.item input {
+  width: 170px;
+  height: 25px;
+}
 .title-box {
   height: 73px;
   display: flex;
@@ -240,11 +265,13 @@ export default {
 /* 客户信息列表 */
 .list-box {
   line-height: 32px;
+  font-size: 16px;
 }
 .user-list {
   display: flex;
   justify-content: space-between;
-  padding: 40px 136px 40px 94px;
+  padding: 40px 31px 40px 0px;
+  
 }
 .prive {
   display: inline-block;
@@ -338,6 +365,6 @@ export default {
 }
 /* 分页 */
 .pages {
-    margin-top: 27px;
+    margin-bottom: 27px;
 }
 </style>
